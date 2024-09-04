@@ -1,0 +1,48 @@
+using System;
+using System.Collections.Generic;
+using System.Linq;
+
+public class HumberAssignmentCollection<T> where T : struct
+{
+    private List<T> lst = new List<T>();
+
+    // Method to add items to the private collection
+    public void AddItem(T item)
+    {
+        lst.Add(item);
+    }
+
+
+    public T GetItem(int index)
+    {
+        if (index < 0 || index >= lst.Count)
+        {
+            throw new ArgumentOutOfRangeException(nameof(index), "Index is out of range.");
+        }
+        return lst[index];
+    }
+
+
+    public List<T> GetSortedItemsDescending()
+    {
+        return lst.OrderByDescending(item => item).ToList();
+    }
+}
+
+class Program
+{
+    static void Main()
+    {
+        var intCollection = new HumberAssignmentCollection<int>();
+        intCollection.AddItem(50);
+        intCollection.AddItem(51);
+        intCollection.AddItem(55);
+        intCollection.AddItem(60);
+        intCollection.AddItem(70);
+        intCollection.AddItem(80);
+        Console.WriteLine("Item at index 1: " + intCollection.GetItem(1)); 
+
+        var sortedLst = intCollection.GetSortedItemsDescending();
+        Console.WriteLine("Sorted items in descending order: " + string.Join(", ", sortedLst)); 
+    }
+}
