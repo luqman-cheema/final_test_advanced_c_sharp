@@ -1,0 +1,57 @@
+using System.Collections.Generic;
+
+//Step 1: Create a class to pass as an argument for the event handlers (EventArgs class)
+public class HeatEventArgs : EventArgs
+{
+    public double Heat { get; }
+
+    public HeatEventArgs(double heat)
+    {
+        Heat = heat;
+    }
+}
+
+//Step 2: Set up the delegate for the event
+public delegate void HeatExceededEventHandler(object sender, HeatEventArgs e);
+
+//Step 3: Declare the code for the event
+public class HeatSensor
+{
+    public event HeatExceededEventHandler HeatExceeded;
+
+    protected virtual void OnHeatExceeded(double heat)
+    {
+        HeatExceeded?.Invoke(this, new HeatEventArgs(heat));
+    }
+
+    public void CheckHeat(double heat)
+    {
+        if (heat > 30) // Example threshold
+        {
+            OnHeatExceeded(heat);
+        }
+    }
+}
+
+//Step 4: Create code that will be run when the event occurs (Event Handler)
+public class HeatMonitor
+{
+    public void OnHeatExceeded(object sender, HeatEventArgs e)
+    {
+        Console.WriteLine($"Warning: Heat exceeded! Current heat: {e.Heat}°C");
+    }
+}
+
+//Step 5: Associate the event with the event handler
+class Program
+{
+    static void Main(string[] args)
+    {
+        HeatSensor sensor = new HeatSensor();
+        HeatMonitor monitor = new HeatMonitor();
+
+        sensor.HeatExceeded += monitor.OnHeatExceeded;
+
+        sensor.CheckHeat(35); 
+    }
+}
